@@ -83,6 +83,71 @@ After the first deployment:
 
 Your site will be live at: **https://smileproductions18.github.io/website**
 
+## Custom Domain Setup (smileproductions.in)
+
+The project is configured to use the custom domain `smileproductions.in`. Follow these steps:
+
+### 1. DNS Configuration
+
+Configure your DNS records with your domain registrar (where you purchased `smileproductions.in`):
+
+**Option A: Apex Domain (smileproductions.in) - Recommended**
+
+Add these A records:
+```
+Type: A
+Name: @ (or leave blank)
+Value: 185.199.108.153
+TTL: 3600 (or default)
+
+Type: A
+Name: @ (or leave blank)
+Value: 185.199.109.153
+TTL: 3600 (or default)
+
+Type: A
+Name: @ (or leave blank)
+Value: 185.199.110.153
+TTL: 3600 (or default)
+
+Type: A
+Name: @ (or leave blank)
+Value: 185.199.111.153
+TTL: 3600 (or default)
+```
+
+**Option B: WWW Subdomain (www.smileproductions.in)**
+
+Add this CNAME record:
+```
+Type: CNAME
+Name: www
+Value: smileproductions18.github.io
+TTL: 3600 (or default)
+```
+
+### 2. GitHub Pages Configuration
+
+1. After deploying to GitHub Pages, go to your repository: https://github.com/smileproductions18/website
+2. Navigate to **Settings** → **Pages**
+3. Under **Custom domain**, enter: `smileproductions.in`
+4. Check **Enforce HTTPS** (this will be available after DNS propagates)
+5. Click **Save**
+
+### 3. Verify Setup
+
+- The `CNAME` file is already created in the `public/` folder and will be included in the build
+- After DNS propagation (can take 24-48 hours), your site will be accessible at:
+  - **https://smileproductions.in**
+  - **https://www.smileproductions.in** (if configured)
+
+### 4. Important Notes
+
+- DNS changes can take 24-48 hours to propagate globally
+- Make sure to deploy after adding the CNAME file: `npm run deploy`
+- GitHub will automatically create the CNAME file in the gh-pages branch
+- HTTPS will be automatically enabled by GitHub Pages once DNS is configured
+
 ### Updating the Site
 
 To update the live site:
