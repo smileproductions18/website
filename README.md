@@ -141,12 +141,59 @@ TTL: 3600 (or default)
   - **https://smileproductions.in**
   - **https://www.smileproductions.in** (if configured)
 
-### 4. Important Notes
+### 4. Troubleshooting "NotServedByPagesError"
+
+If you see "Domain does not resolve to the GitHub Pages server" error:
+
+**Step 1: Verify DNS Records**
+- Use online tools to check your DNS: https://www.whatsmydns.net or https://dnschecker.org
+- Search for A records for `smileproductions.in`
+- All 4 A records should show the GitHub IPs: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
+- If they don't match, update your DNS records at your registrar
+
+**Step 2: Check CNAME File**
+- The CNAME file must contain ONLY the domain name (no extra lines or spaces)
+- After deploying, verify it exists in the `gh-pages` branch at the root
+- It should contain exactly: `smileproductions.in` (no trailing spaces/newlines)
+
+**Step 3: Remove Conflicting Records**
+- Make sure you don't have conflicting CNAME records for the apex domain
+- Apex domains (like `smileproductions.in`) should ONLY use A records, not CNAME
+- If you have a CNAME for `@`, remove it and use A records instead
+
+**Step 4: Wait for DNS Propagation**
+- DNS changes can take 24-48 hours to fully propagate
+- Even if your registrar shows the records, they may not be visible globally yet
+- Check from multiple locations using DNS checker tools
+
+**Step 5: Verify GitHub Pages Settings**
+1. Go to repository Settings → Pages
+2. Make sure "Custom domain" shows: `smileproductions.in`
+3. If it shows "Not yet verified", wait for DNS to propagate
+4. Don't check "Enforce HTTPS" until DNS is verified
+
+**Step 6: Re-deploy**
+After fixing DNS, re-deploy:
+```bash
+npm run deploy
+```
+
+**Step 7: Check for CAA Records (if using)**
+If you have CAA records, ensure they allow Let's Encrypt:
+```
+Type: CAA
+Name: @
+Value: 0 issue "letsencrypt.org"
+```
+
+### 5. Important Notes
 
 - DNS changes can take 24-48 hours to propagate globally
 - Make sure to deploy after adding the CNAME file: `npm run deploy`
+- The CNAME file must be in the `public/` folder (it will be copied to build)
 - GitHub will automatically create the CNAME file in the gh-pages branch
 - HTTPS will be automatically enabled by GitHub Pages once DNS is configured
+- **Never use CNAME for apex domain** - only use A records for the root domain
 
 ### Updating the Site
 
